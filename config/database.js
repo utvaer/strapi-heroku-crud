@@ -4,23 +4,20 @@ module.exports = ({ env }) => {
   const { host, port, database, user, password } = parse(env("DATABASE_URL"));
 
   return {
-    defaultConnection: "default",
-    connections: {
-      default: {
-        connector: "bookshelf",
-        settings: {
-          client: "postgres",
-          host,
-          port,
-          database,
-          username: user,
-          password,
-          ssl: { rejectUnauthorized: env.bool("DATABASE_SSL_SELF", false) },
-        },
-        options: {
-          ssl: env.bool("DATABASE_SSL", false),
+    connection: {
+      client: "postgres",
+      connection: {
+        host,
+        port,
+        database,
+        user,
+        password,
+        schema: env("DATABASE_SCHEMA", "public"), // Not required
+        ssl: {
+          rejectUnauthorized: env.bool("DATABASE_SSL_SELF", false), // For self-signed certificates
         },
       },
+      debug: false,
     },
   };
 };
